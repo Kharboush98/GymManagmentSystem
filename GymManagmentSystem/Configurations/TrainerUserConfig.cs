@@ -6,7 +6,7 @@ namespace GymManagmentSystem.Configurations
 {
     public class TrainerUserConfig : GymUserConfigurations<Trainer>, IEntityTypeConfiguration<Trainer>
     {
-        public void Configure(EntityTypeBuilder<Member> builder)
+        public void Configure(EntityTypeBuilder<Trainer> builder)
         {
             builder.Property(T => T.CreatedAt)
                 .HasDefaultValueSql("GetDate()");

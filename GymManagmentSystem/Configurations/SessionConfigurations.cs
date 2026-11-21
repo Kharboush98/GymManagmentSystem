@@ -9,7 +9,7 @@ namespace GymManagmentSystem.Configurations
         public void Configure(EntityTypeBuilder<Session> builder)
         {
             builder.Property(s => s.CreatedAt)
-                .HasDefaultValue("GetDate()");
+                .HasDefaultValueSql("GetDate()");
 
             builder.ToTable(TB =>
             {
