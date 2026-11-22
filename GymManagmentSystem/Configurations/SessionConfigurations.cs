@@ -8,6 +8,9 @@ namespace GymManagmentSystem.Configurations
     {
         public void Configure(EntityTypeBuilder<Session> builder)
         {
+            builder.Property(s => s.CreatedAt)
+                .HasDefaultValueSql("GetDate()");
+
             builder.ToTable(TB =>
             {
                 TB.HasCheckConstraint("CK_Capacity", "Capacity Between 1 And 25");

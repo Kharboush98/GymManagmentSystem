@@ -21,7 +21,5 @@ namespace GymManagmentSystem.Contexts
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Session> Sessions { get; set; }
-
-
     }
 }
