@@ -23,5 +23,18 @@ namespace GymManagmentSystem.Repositories.Classes
         {
             return await _dbContext.Plans.FindAsync([id], ct);
         }
+
+        public async Task<int> UpdateAsync(CancellationToken ct = default)
+        {
+            try
+            {
+                return await _dbContext.SaveChangesAsync(ct);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return 0;
+            }
+        }
     }
 }

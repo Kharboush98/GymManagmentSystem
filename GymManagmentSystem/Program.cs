@@ -14,8 +14,6 @@ namespace GymManagmentSystem
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-
-
             //Service registration
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
             builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();

@@ -1,4 +1,4 @@
-﻿@model Plan
+﻿@model UpdatePlanViewModel
 
 @{
     ViewBag.Title = "Edit Plan";
@@ -13,6 +13,8 @@
 
 <form asp-action="Edit" method="post" class="card-r form-card">
 
+    <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+
     <div class="form-section">
         <div class="form-grid">
             <div class="field full">
@@ -26,6 +28,7 @@
                     <input asp-for="Price" type="number" step="0.01" min="0.01" class="input-r" />
                     <span class="addon">EGP</span>
                 </div>
+                <span asp-validation-for="Price" class="field-error"></span>
             </div>
             <div class="field">
                 <label asp-for="DurationDays"></label>
@@ -33,11 +36,13 @@
                     <input asp-for="DurationDays" type="number" min="1" max="365" class="input-r" />
                     <span class="addon">days</span>
                 </div>
+                <span asp-validation-for="DurationDays" class="field-error"></span>
             </div>
             <div class="field full">
                 <label asp-for="Description"></label>
                 <textarea asp-for="Description" class="input-r" rows="4"></textarea>
             </div>
+            <span asp-validation-for="Description" class="field-error"></span>
         </div>
     </div>
 

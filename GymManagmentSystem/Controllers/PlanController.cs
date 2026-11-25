@@ -1,8 +1,6 @@
-﻿using GymManagmentSystem.Contexts;
-using GymManagmentSystem.Repositories.Classes;
-using GymManagmentSystem.Repositories.Interfaces;
+﻿using GymManagmentSystem.Repositories.Interfaces;
+using GymManagmentSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace GymManagmentSystem.Controllers
 {
@@ -24,7 +22,18 @@ namespace GymManagmentSystem.Controllers
         {
             var plans = await _planRepo.GetAllAsync(ct);
 
-            return View(plans);
+            var plansViewModel = plans.Select(p => new PlanViewModel()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                DurationDays = p.DurationDays,
+                isActive = p.isActive
+            });
+
+
+            return View(plansViewModel);
         }
 
         // Get BaseUrl/plan/Edit/1
@@ -47,8 +56,60 @@ namespace GymManagmentSystem.Controllers
                 return RedirectToAction(nameof (Index));
             }
 
-            return View(plan);
+            var plansViewModel = new UpdatePlanViewModel()
+            {
+                Name = plan.Name,
+                Description = plan.Description,
+                DurationDays = plan.DurationDays,
+                Price = plan.Price,
+            };
+
+            return View(plansViewModel);
         }
 
+
+        // Get BaseUrl/plan/Edit/1
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([FromRoute]int id , UpdatePlanViewModel updatedPlan , CancellationToken ct)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(updatedPlan);
+            }
+
+            var plan = await _planRepo.GetByIdAsync(id, ct);
+
+            if (plan is null || !plan.isActive)
+            {
+                TempData["ErrorMessage"] = "This Plan Cannot be edited";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var hasCurrentMemberships = await _membershipRepo.AnyAsync(M => M.PlanId == id && M.EndDate > DateTime.Now, ct);
+
+            if (hasCurrentMemberships)
+            {
+                TempData["ErrorMessage"] = "This Plan Cannot be edited";
+                return RedirectToAction(nameof(Index));
+            }
+
+            //update
+            plan.Description = updatedPlan.Description;
+            plan.DurationDays = updatedPlan.DurationDays;
+            plan.Price = updatedPlan.Price;
+            plan.UpdatedAt = DateTime.Now;
+
+            var res = await _planRepo.UpdateAsync(ct);
+            if (res > 0)
+            {
+                TempData["SuccessMessage"] = "Plan updated successfully";
+                return RedirectToAction(nameof(Index));
+            } else
+            {
+                ModelState.AddModelError(string.Empty, "Failed to update plan");
+                return View(updatedPlan);
+            }
+        }
     }
 }
