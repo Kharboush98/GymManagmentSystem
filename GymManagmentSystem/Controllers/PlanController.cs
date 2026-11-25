@@ -35,13 +35,15 @@ namespace GymManagmentSystem.Controllers
 
             if(plan is null || !plan.isActive)
             {
+                TempData["ErrorMessage"] = "This Plan Cannot be edited";
                 return RedirectToAction(nameof(Index));
             }
 
             var hasCurrentMemberships = await _membershipRepo.AnyAsync(M => M.PlanId == id && M.EndDate > DateTime.Now , ct);
 
             if (hasCurrentMemberships)
-            { 
+            {
+                TempData["ErrorMessage"] = "This Plan Cannot be edited";
                 return RedirectToAction(nameof (Index));
             }
 
