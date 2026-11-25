@@ -1,4 +1,6 @@
 ﻿using GymManagmentSystem.Contexts;
+using GymManagmentSystem.Repositories.Classes;
+using GymManagmentSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,14 +8,15 @@ namespace GymManagmentSystem.Controllers
 {
     public class PlanController : Controller
     {
-        private readonly GymDbContext _dbContext = new GymDbContext();
+        private readonly IPlanRepository _planRepo = new PlanRepository();
+
 
         //Get BaseUrl/plan
         //Get BaseUrl/plan/Index
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(CancellationToken ct)
         {
-            var plans = await _dbContext.Plans.ToListAsync();
+            var plans = await _planRepo.GetAllAsync(ct);
 
             return View(plans);
         }
