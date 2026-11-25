@@ -9,11 +9,13 @@ namespace GymManagmentSystem.Controllers
     public class PlanController : Controller
     {
         private readonly IPlanRepository _planRepo;
+        private readonly IMembershipRepository _membershipRepo;
 
         //dependecyInjection
-        public PlanController(IPlanRepository planRepo)
+        public PlanController(IPlanRepository planRepo , IMembershipRepository membershipRepo)
         {
             this._planRepo = planRepo;
+            this._membershipRepo = membershipRepo;
         }
 
         // Get BaseUrl/plan or Get BaseUrl/plan/Index
@@ -24,5 +26,27 @@ namespace GymManagmentSystem.Controllers
 
             return View(plans);
         }
+
+        // Get BaseUrl/plan/Edit/1
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id , CancellationToken ct)
+        {
+            var plan = await _planRepo.GetByIdAsync(id , ct);
+
+            if(plan is null || !plan.isActive)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var hasCurrentMemberships = await _membershipRepo.AnyAsync(M => M.PlanId == id && M.EndDate > DateTime.Now , ct);
+
+            if (hasCurrentMemberships)
+            { 
+                return RedirectToAction(nameof (Index));
+            }
+
+            return View(plan);
+        }
+
     }
 }

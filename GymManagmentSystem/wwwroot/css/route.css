@@ -80,6 +80,10 @@ a {
     transition: transform .25s ease;
 }
 
+.container {
+    padding : 25px;
+}
+
 .brand {
     display: flex;
     align-items: center;

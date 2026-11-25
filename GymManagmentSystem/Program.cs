@@ -23,6 +23,7 @@ namespace GymManagmentSystem
 
             //Service registration
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
 
 
             var app = builder.Build();

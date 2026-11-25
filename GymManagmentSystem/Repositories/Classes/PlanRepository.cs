@@ -18,5 +18,10 @@ namespace GymManagmentSystem.Repositories.Classes
         {
             return await _dbContext.Plans.AsNoTracking().ToListAsync(ct);
         }
+
+        public async Task<Plan?> GetByIdAsync(int id, CancellationToken ct = default)
+        {
+            return await _dbContext.Plans.FindAsync([id], ct);
+        }
     }
 }
