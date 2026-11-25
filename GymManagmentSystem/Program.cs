@@ -1,3 +1,8 @@
+using GymManagmentSystem.Contexts;
+using GymManagmentSystem.Repositories.Classes;
+using GymManagmentSystem.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 namespace GymManagmentSystem
 {
     public class Program
@@ -8,6 +13,16 @@ namespace GymManagmentSystem
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //Service registration
+            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+
+            //DbSetup
+            builder.Services.AddDbContext<GymDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             var app = builder.Build();
 
