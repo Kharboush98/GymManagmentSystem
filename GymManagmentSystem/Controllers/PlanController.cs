@@ -8,11 +8,15 @@ namespace GymManagmentSystem.Controllers
 {
     public class PlanController : Controller
     {
-        private readonly IPlanRepository _planRepo = new PlanRepository();
+        private readonly IPlanRepository _planRepo;
 
+        //dependecyInjection
+        public PlanController(IPlanRepository planRepo)
+        {
+            this._planRepo = planRepo;
+        }
 
-        //Get BaseUrl/plan
-        //Get BaseUrl/plan/Index
+        // Get BaseUrl/plan or Get BaseUrl/plan/Index
         [HttpGet]
         public async Task<IActionResult> Index(CancellationToken ct)
         {
